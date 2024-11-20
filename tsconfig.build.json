@@ -1,0 +1,21 @@
+// same as tsconfig.json, but w/o resolveJsonModule
+{
+  "compilerOptions": {
+    "rootDir": ".",
+    "baseUrl": ".",
+    "outDir": "dist",
+    "paths": {
+      "@/*": ["./src/*"],
+    },
+    "target": "ES2022",
+    "module": "commonjs",
+    "lib": ["ES2022"],
+    "strict": true,
+    "sourceMap": true,
+    "esModuleInterop": true
+  },
+  "include": [
+    "src/**/*",
+  ],
+  "exclude": ["dist", "node_modules", "tests"]
+}
