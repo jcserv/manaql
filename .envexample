@@ -1,1 +1,1 @@
-DATABASE_URL="postgresql://root:password@localhost:5432/prisma-graphql-api-template"
+DATABASE_URL="postgresql://root:password@localhost:5432/manaql"
