@@ -23,7 +23,7 @@
     "codegen": "NODE_OPTIONS='-r tsconfig-paths/register' graphql-codegen --config codegen.ts",
     "prisma:pull": "prisma db pull",
     "prisma:gen": "prisma generate",
-    "prisma:migrate": "prisma migrate dev --name",
+    "prisma:migrate": "prisma migrate dev",
     "gen": "pnpm prisma:gen && pnpm codegen",
     "clean": "rm -rf dist node_modules"
   },

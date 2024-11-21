@@ -1,13 +1,16 @@
-import { Prisma } from "@prisma/client";
+import { card, printing, Prisma } from "@prisma/client";
 
-import { Printing } from "@/__generated__/graphql";
 import { PrintingNode } from "@/graphql/nodes/printing";
-import { CardFilterRef, CardRef, QueryFieldBuilder } from "@/graphql/builder";
 import { compare } from "@/utils";
 import { prisma } from "@/db";
 import { CardFilter, FilterOperator } from "@/graphql/types/filter";
+import { builder } from "@/graphql/builder";
+import {
+  CardFilterRef,
+  QueryFieldBuilder,
+} from "@/graphql/builderTypes";
 
-const CardNode = CardRef.implement({
+const CardNode = builder.objectRef<card>("Card").implement({
   description:
     "A card is the standard component of Magic: The Gathering and one of its resources.",
   fields: (t) => ({
@@ -17,11 +20,11 @@ const CardNode = CardRef.implement({
       type: PrintingNode,
       resolve: async (parent, args, context) => {
         const allPrintings = await context.loaders.printingsByCard.load(
-          parseInt(parent.id as string),
+          parent.id
         );
 
         const sortedPrintings = [...allPrintings].sort((a, b) =>
-          compare(a.id, b.id),
+          compare(a.id, b.id)
         );
 
         const take = args.first ?? 10;
@@ -29,14 +32,14 @@ const CardNode = CardRef.implement({
         let startIndex = 0;
         if (args.after) {
           const cursorIndex = sortedPrintings.findIndex(
-            (printing) => printing.id === parseInt(args.after ?? ""),
+            (printing) => printing.id === parseInt(args.after ?? "")
           );
           startIndex = cursorIndex + 1;
         }
 
         const paginatedPrintings = sortedPrintings.slice(
           startIndex,
-          startIndex + take + 1,
+          startIndex + take + 1
         );
 
         const hasNextPage = paginatedPrintings.length > take;
@@ -49,7 +52,7 @@ const CardNode = CardRef.implement({
           node,
         })) as Array<{
           cursor: string;
-          node: Printing;
+          node: printing;
         }>;
 
         return {

@@ -1,4 +1,4 @@
-import { PrismaClient, card, Prisma } from "@prisma/client";
+import { PrismaClient, card, Prisma, cardtype } from "@prisma/client";
 import { faker } from "@faker-js/faker";
 import { PrintingFactory, CreatePrintingInput } from "@tests/factories";
 
@@ -10,6 +10,7 @@ export class CardFactory {
   static getDefaults(): Omit<CreateCardInput, "printing"> {
     return {
       name: faker.person.fullName(),
+      main_type: faker.helpers.enumValue(cardtype)
     };
   }
 

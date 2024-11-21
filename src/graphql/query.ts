@@ -1,4 +1,5 @@
-import { builder, QueryFieldBuilder } from "@/graphql/builder";
+import { builder } from "@/graphql/builder";
+import { QueryFieldBuilder } from "@/graphql/builderTypes";
 import { addCardNode } from "@/graphql/nodes/card";
 
 builder.queryType({

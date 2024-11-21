@@ -1,10 +1,10 @@
 import DataLoader from "dataloader";
 
-import { Card, Printing } from "@/__generated__/graphql";
+import { card, printing } from "@prisma/client";
 import { prisma } from "@/db";
 
 export const createCardLoader = () => {
-  return new DataLoader<number, Card>(async (ids) => {
+  return new DataLoader<number, card>(async (ids) => {
     const cards = await prisma.card.findMany({
       where: {
         id: {
@@ -19,7 +19,7 @@ export const createCardLoader = () => {
 };
 
 export const createPrintingLoader = () => {
-  return new DataLoader<number, Printing>(async (ids) => {
+  return new DataLoader<number, printing>(async (ids) => {
     const printings = await prisma.printing.findMany({
       where: {
         id: {
@@ -36,7 +36,7 @@ export const createPrintingLoader = () => {
 };
 
 export const createPrintingsByCardLoader = () => {
-  return new DataLoader<number, Printing[]>(async (cardIds) => {
+  return new DataLoader<number, printing[]>(async (cardIds) => {
     const printings = await prisma.printing.findMany({
       where: {
         card_id: {
@@ -48,7 +48,7 @@ export const createPrintingsByCardLoader = () => {
       },
     });
 
-    const printingsByCard = new Map<number, Printing[]>();
+    const printingsByCard = new Map<number, printing[]>();
     cardIds.forEach((id) => printingsByCard.set(id, []));
 
     printings.forEach((printing) => {

@@ -1,4 +1,4 @@
-import { PrismaClient, printing, Prisma } from "@prisma/client";
+import { PrismaClient, printing, Prisma, finish } from "@prisma/client";
 import { faker } from "@faker-js/faker";
 
 export type CreatePrintingInput = Omit<Prisma.printingCreateInput, "card">;
@@ -9,7 +9,10 @@ export class PrintingFactory {
   static getDefaults(): Omit<CreatePrintingInput, "card"> {
     return {
       set: faker.string.alpha({ length: 3 }),
+      set_name: faker.string.alpha({ length: 10 }),
       collector_number: faker.string.numeric({ length: 3 }),
+      image_uri: faker.image.url(),
+      finishes: faker.helpers.arrayElements(Object.values(finish), { min: 1, max: 3})
     };
   }
 

@@ -2,6 +2,23 @@
 
 ![visitors](https://img.shields.io/endpoint?url=https://vu-mi.com/api/v1/views?id=jcserv/manaql)
 
+> [!IMPORTANT]
+> 
+> ManaQL is not meant to be a replacement for Scryfall, and was intended to be a minimally-viable-replacement for the usecase highlighted.
+
+manaql is a GraphQL API for Magic: The Gathering cards, powered by the [Scryfall API](https://scryfall.com/docs/api/bulk-data).
+
+It currently supports basic search features (see the example queries section below) for Magic: The Gathering web applications, namely:
+- get cards and all their printings, by card name(s)
+- autocomplete card names
+
+## why?
+
+I built this to be used by [bling-my-deck](https://github.com/jcserv/bling-my-deck), which has a need to query for
+{cards and all their printings, by card name}, which wasn't supported by Scryfall.
+
+also, as a learning experience!
+
 ## installation
 
 ### prerequisites
@@ -52,7 +69,14 @@ Variables:
         "fields": ["name"],
         "query": {
             "operator": "eq",
-            "value": ["Animate Dead", "Arachnogenesis", "Assassin's Trophy", "Azusa, Lost but Seeking", "Bala Ged Recovery", "Baba Lysaga, Night Witch"]
+            "value": [
+              "Animate Dead", 
+              "Arachnogenesis", 
+              "Assassin's Trophy", 
+              "Azusa, Lost but Seeking", 
+              "Bala Ged Recovery", 
+              "Baba Lysaga, Night Witch"
+            ]
         }
     }
 }
@@ -81,9 +105,14 @@ Variables:
 }
 ```
 
-changes to copy over to template repo:
+TODO:
 
+features
+- better fuzzy searching
+
+add to template
 - move nodes into nodes/ folder
 - fix test db using docker db
 - infer builder types
 - test extension
+- builder.objectRef should be looking at prisma type

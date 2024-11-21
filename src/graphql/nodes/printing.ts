@@ -1,6 +1,8 @@
-import { PrintingRef } from "@/graphql/builder";
+import { printing } from "@prisma/client";
+import { builder } from "../builder";
 
-export const PrintingNode = PrintingRef.implement({
+
+export const PrintingNode = builder.objectRef<printing>("Printing").implement({
   description:
     "A printing is a version of a card that is unique to a particular set.",
   fields: (t) => ({
