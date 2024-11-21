@@ -5,6 +5,7 @@
     "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode",
     "prisma.prisma",
-    "graphql.vscode-graphql"
+    "graphql.vscode-graphql",
+    "vitest.explorer"
   ]
 }
