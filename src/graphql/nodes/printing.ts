@@ -8,6 +8,6 @@ export const PrintingNode = builder.objectRef<printing>("Printing").implement({
   fields: (t) => ({
     id: t.exposeID("id"),
     set: t.exposeString("set"),
-    collector_number: t.exposeString("collector_number"),
+    collectorNumber: t.exposeString("collector_number"),
   }),
 });

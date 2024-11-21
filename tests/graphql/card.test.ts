@@ -25,6 +25,7 @@ describe("When querying cards endpoint", () => {
 
   beforeEach(async () => {
     ctx = await TestContext.create();
+    await cleanupDatabase(prisma);
   });
 
   afterEach(async () => {
@@ -43,7 +44,7 @@ describe("When querying cards endpoint", () => {
               node {
                 id
                 set
-                collector_number
+                collectorNumber
               }
             }
           }
@@ -76,13 +77,13 @@ describe("When querying cards endpoint", () => {
           expect.objectContaining({
             node: expect.objectContaining({
               set: "MKC",
-              collector_number: "125",
+              collectorNumber: "125",
             }),
           }),
           expect.objectContaining({
             node: expect.objectContaining({
               set: "30A",
-              collector_number: "92",
+              collectorNumber: "92",
             }),
           }),
         ]),

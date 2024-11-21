@@ -16,6 +16,7 @@ const CardNode = builder.objectRef<card>("Card").implement({
   fields: (t) => ({
     id: t.exposeID("id"),
     name: t.exposeString("name"),
+    mainType: t.exposeString("main_type"),
     printings: t.connection({
       type: PrintingNode,
       resolve: async (parent, args, context) => {

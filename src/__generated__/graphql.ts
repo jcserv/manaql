@@ -23,6 +23,7 @@ export type Scalars = {
 export type Card = {
   __typename?: 'Card';
   id?: Maybe<Scalars['ID']['output']>;
+  mainType?: Maybe<Scalars['String']['output']>;
   name?: Maybe<Scalars['String']['output']>;
   printings?: Maybe<CardPrintingsConnection>;
 };
@@ -77,7 +78,7 @@ export type PageInfo = {
 /** A printing is a version of a card that is unique to a particular set. */
 export type Printing = {
   __typename?: 'Printing';
-  collector_number?: Maybe<Scalars['String']['output']>;
+  collectorNumber?: Maybe<Scalars['String']['output']>;
   id?: Maybe<Scalars['ID']['output']>;
   set?: Maybe<Scalars['String']['output']>;
 };
@@ -199,6 +200,7 @@ export type ResolversParentTypes = {
 
 export type CardResolvers<ContextType = any, ParentType extends ResolversParentTypes['Card'] = ResolversParentTypes['Card']> = {
   id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  mainType?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   name?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   printings?: Resolver<Maybe<ResolversTypes['CardPrintingsConnection']>, ParentType, ContextType, Partial<CardprintingsArgs>>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
@@ -229,7 +231,7 @@ export type PageInfoResolvers<ContextType = any, ParentType extends ResolversPar
 };
 
 export type PrintingResolvers<ContextType = any, ParentType extends ResolversParentTypes['Printing'] = ResolversParentTypes['Printing']> = {
-  collector_number?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  collectorNumber?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
   set?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
