@@ -15,7 +15,7 @@ export class PrintingFactory {
 
   async create(
     cardId: number,
-    input: Partial<Omit<CreatePrintingInput, "card">> = {}
+    input: Partial<Omit<CreatePrintingInput, "card">> = {},
   ): Promise<printing> {
     const data: Prisma.printingCreateInput = {
       ...PrintingFactory.getDefaults(),
@@ -33,7 +33,7 @@ export class PrintingFactory {
   async createMany(
     cardId: number,
     count: number,
-    input: Partial<Omit<CreatePrintingInput, "card">> = {}
+    input: Partial<Omit<CreatePrintingInput, "card">> = {},
   ): Promise<printing[]> {
     const printings = [];
     for (let i = 0; i < count; i++) {

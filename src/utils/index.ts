@@ -1,4 +1,6 @@
-export function safeParseInt(value: string | number | undefined | null): number {
+export function safeParseInt(
+  value: string | number | undefined | null,
+): number {
   if (value == null) {
     return 0;
   }

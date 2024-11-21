@@ -7,7 +7,7 @@ const config: CodegenConfig = {
   schema: printSchema(createPothosSchema().public),
   config: {
     transformUnderscore: false,
-    namingConvention: 'keep',
+    namingConvention: "keep",
   },
   generates: {
     "src/__generated__/graphql.ts": {

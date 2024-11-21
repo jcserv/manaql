@@ -28,7 +28,9 @@ export const createPrintingLoader = () => {
       },
     });
 
-    const printingMap = new Map(printings.map((printing) => [printing.id, printing]));
+    const printingMap = new Map(
+      printings.map((printing) => [printing.id, printing]),
+    );
     return ids.map((id) => printingMap.get(id)!);
   });
 };

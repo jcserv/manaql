@@ -1,2 +1,2 @@
-export * from './cardFactory';
-export * from './printingFactory';
+export * from "./cardFactory";
+export * from "./printingFactory";

@@ -19,12 +19,14 @@
 5. visit http://localhost:4000/graphql in your browser
 
 ### example queries
+
 POST https://api.manaql.com/graphql
 
 Get cards by name and all of their printings
+
 ```graphql
-query Cards($filter: CardFilter!) {
-  cards(filter: $filter) {
+query Cards($filter: CardFilter!, $first: Int) {
+  cards(filter: $filter, first: $first) {
     id
     name
     printings {
@@ -39,19 +41,43 @@ query Cards($filter: CardFilter!) {
   }
 }
 
-Variables: 
+Variables:
 {
     "filter": {
         "fields": ["name"],
         "query": {
-            "operator": "co",
+            "operator": "eq",
             "value": ["Animate Dead", "Arachnogenesis", "Assassin's Trophy", "Azusa, Lost but Seeking", "Bala Ged Recovery", "Baba Lysaga, Night Witch"]
         }
     }
 }
 ```
 
+Autocomplete/typeahead
+
+```graphql
+query Cards($filter: CardFilter!) {
+  cards(filter: $filter) {
+    id
+    name
+  }
+}
+
+Variables:
+{
+    "filter": {
+        "fields": ["name"],
+        "query": {
+            "operator": "sw",
+            "value": "Baba Ly"
+        }
+    },
+    "first": 10
+}
+```
+
 changes to copy over to template repo:
+
 - move nodes into nodes/ folder
 - fix test db using docker db
 - infer builder types

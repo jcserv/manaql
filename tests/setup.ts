@@ -1,5 +1,5 @@
-import { PrismaClient } from '@prisma/client';
-import { cleanupDatabase } from '@tests/utils';
+import { PrismaClient } from "@prisma/client";
+import { cleanupDatabase } from "@tests/utils";
 
 // vi.mock('@/services/external-service', () => ({
 //   ExternalService: {

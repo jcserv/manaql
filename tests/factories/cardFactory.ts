@@ -26,7 +26,7 @@ export class CardFactory {
 
   async createMany(
     count: number,
-    input: Partial<CreateCardInput> = {}
+    input: Partial<CreateCardInput> = {},
   ): Promise<card[]> {
     const cards = [];
     for (let i = 0; i < count; i++) {
@@ -38,7 +38,7 @@ export class CardFactory {
   async createWithPrintings(
     printingCount: number = 1,
     cardInput: Partial<Omit<CreateCardInput, "printing">> = {},
-    printingInputs: Partial<CreatePrintingInput>[] = []
+    printingInputs: Partial<CreatePrintingInput>[] = [],
   ): Promise<card> {
     const defaultPrintingInputs = Array(printingCount)
       .fill(null)

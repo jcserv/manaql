@@ -19,6 +19,7 @@ export type Scalars = {
   Date: { input: any; output: any; }
 };
 
+/** A card is the standard component of Magic: The Gathering and one of its resources. */
 export type Card = {
   __typename?: 'Card';
   id?: Maybe<Scalars['ID']['output']>;
@@ -27,11 +28,24 @@ export type Card = {
 };
 
 
+/** A card is the standard component of Magic: The Gathering and one of its resources. */
 export type CardprintingsArgs = {
   after?: InputMaybe<Scalars['String']['input']>;
   before?: InputMaybe<Scalars['String']['input']>;
   first?: InputMaybe<Scalars['Int']['input']>;
   last?: InputMaybe<Scalars['Int']['input']>;
+};
+
+/** The fields of Card to apply the filter(s) on. */
+export enum CardField {
+  name = 'name'
+}
+
+/** The filter to narrow down the results of a query. */
+export type CardFilter = {
+  fields: Array<CardField>;
+  operator: FilterOperator;
+  query: Array<Scalars['String']['input']>;
 };
 
 export type CardPrintingsConnection = {
@@ -46,6 +60,12 @@ export type CardPrintingsConnectionEdge = {
   node?: Maybe<Printing>;
 };
 
+/** The filter operator to apply. */
+export enum FilterOperator {
+  eq = 'eq',
+  sw = 'sw'
+}
+
 export type PageInfo = {
   __typename?: 'PageInfo';
   endCursor?: Maybe<Scalars['String']['output']>;
@@ -54,6 +74,7 @@ export type PageInfo = {
   startCursor?: Maybe<Scalars['String']['output']>;
 };
 
+/** A printing is a version of a card that is unique to a particular set. */
 export type Printing = {
   __typename?: 'Printing';
   collector_number?: Maybe<Scalars['String']['output']>;
@@ -68,7 +89,9 @@ export type Query = {
 
 
 export type QuerycardsArgs = {
-  id: Scalars['ID']['input'];
+  filter?: InputMaybe<CardFilter>;
+  first: Scalars['Int']['input'];
+  id?: InputMaybe<Scalars['Int']['input']>;
 };
 
 
@@ -144,9 +167,12 @@ export type DirectiveResolverFn<TResult = {}, TParent = {}, TContext = {}, TArgs
 export type ResolversTypes = {
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   Card: ResolverTypeWrapper<Card>;
+  CardField: CardField;
+  CardFilter: CardFilter;
   CardPrintingsConnection: ResolverTypeWrapper<CardPrintingsConnection>;
   CardPrintingsConnectionEdge: ResolverTypeWrapper<CardPrintingsConnectionEdge>;
   Date: ResolverTypeWrapper<Scalars['Date']['output']>;
+  FilterOperator: FilterOperator;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   PageInfo: ResolverTypeWrapper<PageInfo>;
@@ -159,6 +185,7 @@ export type ResolversTypes = {
 export type ResolversParentTypes = {
   Boolean: Scalars['Boolean']['output'];
   Card: Card;
+  CardFilter: CardFilter;
   CardPrintingsConnection: CardPrintingsConnection;
   CardPrintingsConnectionEdge: CardPrintingsConnectionEdge;
   Date: Scalars['Date']['output'];
@@ -209,7 +236,7 @@ export type PrintingResolvers<ContextType = any, ParentType extends ResolversPar
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  cards?: Resolver<Maybe<Array<ResolversTypes['Card']>>, ParentType, ContextType, RequireFields<QuerycardsArgs, 'id'>>;
+  cards?: Resolver<Maybe<Array<ResolversTypes['Card']>>, ParentType, ContextType, RequireFields<QuerycardsArgs, 'first'>>;
 };
 
 export type Resolvers<ContextType = any> = {
