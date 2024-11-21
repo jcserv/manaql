@@ -7,6 +7,7 @@ import { CardFilter, FilterOperator } from "@/graphql/types/filter";
 import { builder } from "@/graphql/builder";
 import {
   CardFilterRef,
+  CardTypeRef,
   QueryFieldBuilder,
 } from "@/graphql/builderTypes";
 
@@ -14,10 +15,15 @@ const CardNode = builder.objectRef<card>("Card").implement({
   description:
     "A card is the standard component of Magic: The Gathering and one of its resources.",
   fields: (t) => ({
-    id: t.exposeID("id"),
-    name: t.exposeString("name"),
-    mainType: t.exposeString("main_type"),
+    id: t.exposeID("id", { description: "The unique identifier of a card." }),
+    name: t.exposeString("name", { description: "The name of a card." }),
+    mainType: t.field({
+      description: "The primary type of a card; can be used to group cards by type in a decklist.",
+      type: CardTypeRef,
+      resolve: (parent) => parent.main_type,
+    }),
     printings: t.connection({
+      description: "The printings of a card.",
       type: PrintingNode,
       resolve: async (parent, args, context) => {
         const allPrintings = await context.loaders.printingsByCard.load(
