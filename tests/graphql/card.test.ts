@@ -20,7 +20,7 @@ interface GetCardsResponse {
 }
 
 const GET_CARDS = gql`
-  query GetCards($id: ID!) {
+  query GetCards($id: Int!) {
     cards(id: $id) {
       id
       name
@@ -29,7 +29,7 @@ const GET_CARDS = gql`
           node {
             id
             set
-            collectorNumber
+            collector_number
           }
         }
       }
@@ -65,9 +65,8 @@ describe("When querying cards endpoint", () => {
     const response = await ctx.query<GetCardsResponse>(GET_CARDS, {
       id: card.id,
     });
-
+    console.log(response);
     expect(response.success).toBe(true);
-    console.log(response.data?.cards[0].printings.edges.forEach((edge) => console.log(edge.node)));
     expect(response.data?.cards[0]).toMatchObject({
       id: card.id.toString(),
       name: "Animate Dead",
@@ -76,13 +75,13 @@ describe("When querying cards endpoint", () => {
           expect.objectContaining({
             node: expect.objectContaining({
               set: "MKC",
-              collectorNumber: "125",
+              collector_number: "125",
             }),
           }),
           expect.objectContaining({
             node: expect.objectContaining({
               set: "30A",
-              collectorNumber: "92",
+              collector_number: "92",
             }),
           }),
         ]),

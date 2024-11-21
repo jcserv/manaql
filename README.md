@@ -50,3 +50,8 @@ Variables:
     }
 }
 ```
+
+changes to copy over to template repo:
+- move nodes into nodes/ folder
+- fix test db using docker db
+- infer builder types

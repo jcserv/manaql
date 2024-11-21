@@ -21,7 +21,9 @@ export class TestContext {
   static client: GraphQLClient;
 
   constructor() {
-    this.db = new PrismaClient();
+    this.db = new PrismaClient({
+      datasourceUrl: process.env.TEST_DATABASE_URL,
+    });
     this.context = {
       prisma: this.db,
       loaders: {

@@ -11,6 +11,7 @@ const prisma = new PrismaClient();
 
 beforeAll(async () => {
   await prisma.$connect();
+  await cleanupDatabase(prisma);
 });
 
 afterAll(async () => {

@@ -1,7 +1,8 @@
-import { Printing } from "@/__generated__/graphql";
-import { PrintingNode } from "@/graphql/printing";
-import { CardRef } from "@/graphql/builder";
-import { compare } from "@/utils";
+import {  Printing } from "@/__generated__/graphql";
+import { PrintingNode } from "@/graphql/nodes/printing";
+import { CardRef, QueryFieldBuilder } from "@/graphql/builder";
+import { compare, safeParseInt } from "@/utils";
+import { prisma } from "@/db";
 
 export const CardNode = CardRef.implement({
   fields: (t) => ({
@@ -57,3 +58,19 @@ export const CardNode = CardRef.implement({
     }),
   }),
 });
+
+export function addCardNode(t: QueryFieldBuilder) {
+  return t.field({
+    type: [CardNode],
+    args: {
+      id: t.arg.int({ required: false }),
+    },
+    resolve: async (parent, args) => {
+      return prisma.card.findMany({
+        where: {
+          id: safeParseInt(args.id),
+        },
+      });
+    },
+  })
+}

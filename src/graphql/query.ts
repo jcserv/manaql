@@ -1,21 +1,8 @@
-import { prisma } from "@/db";
-import { CardNode } from "@/graphql/card";
-import { builder } from "@/graphql/builder";
+import { builder, QueryFieldBuilder } from "@/graphql/builder";
+import { addCardNode } from "@/graphql/nodes/card";
 
 builder.queryType({
-  fields: (t) => ({
-    cards: t.field({
-      type: [CardNode],
-      args: {
-        id: t.arg.id({ required: true }),
-      },
-      resolve: async (parent, args) => {
-        return prisma.card.findMany({
-          where: {
-            id: parseInt(args.id),
-          },
-        });
-      },
-    }),
+  fields: (t: QueryFieldBuilder) => ({
+    cards: addCardNode(t),
   }),
 });
