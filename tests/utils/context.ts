@@ -2,7 +2,6 @@ import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
 import { DocumentNode, print, GraphQLError } from "graphql";
 import { ClientError, GraphQLClient } from "graphql-request";
-import { PrismaClient } from "@prisma/client";
 
 import { createPothosSchema } from "@/graphql/schema";
 import { Context } from "@/context";
@@ -12,19 +11,15 @@ import {
   createPrintingsByCardLoader,
 } from "@/graphql/dataLoaders";
 import { GraphQLResponse } from "@tests/graphql/types";
+import { prisma } from "@/db";
 
 export class TestContext {
-  public db: PrismaClient;
   public server: ApolloServer<Context>;
   private context: Context;
   static client: GraphQLClient;
 
   constructor() {
-    this.db = new PrismaClient({
-      datasourceUrl: process.env.TEST_DATABASE_URL,
-    });
     this.context = {
-      prisma: this.db,
       loaders: {
         printing: createPrintingLoader(),
         card: createCardLoader(),
@@ -94,7 +89,7 @@ export class TestContext {
 
   async cleanup(): Promise<void> {
     await this.server.stop();
-    await this.db.$disconnect();
+    await prisma.$disconnect();
   }
 
   static async create(): Promise<TestContext> {

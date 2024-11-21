@@ -3,6 +3,7 @@ import { gql } from "graphql-tag";
 import { TestContext } from "@tests/utils/context";
 import { CardFactory } from "@tests/factories";
 import { cleanupDatabase } from "@tests/utils";
+import { prisma } from "@/db";
 
 interface GetCardsResponse {
   cards: Array<{
@@ -27,8 +28,8 @@ describe("When querying cards endpoint", () => {
   });
 
   afterEach(async () => {
-    await cleanupDatabase(ctx.db);
-    await ctx.db.$disconnect();
+    await cleanupDatabase(prisma);
+    await prisma.$disconnect();
   });
 
   it("should return card with printings using dataloader", async () => {
@@ -50,7 +51,7 @@ describe("When querying cards endpoint", () => {
       }
     `;
 
-    const cardFactory = new CardFactory(ctx.db);
+    const cardFactory = new CardFactory(prisma);
     const card = await cardFactory.createWithPrintings(
       2,
       {
@@ -66,7 +67,6 @@ describe("When querying cards endpoint", () => {
       id: card.id,
       first: 1,
     });
-    console.log(response);
     expect(response.success).toBe(true);
     expect(response.data?.cards[0]).toMatchObject({
       id: card.id.toString(),
@@ -100,7 +100,7 @@ describe("When querying cards endpoint", () => {
   `;
 
   it("should allow filtering by name sw case insensitive", async () => {
-    const cardFactory = new CardFactory(ctx.db);
+    const cardFactory = new CardFactory(prisma);
     const card = await cardFactory.create({
       name: "Animate Dead",
     });
@@ -118,7 +118,7 @@ describe("When querying cards endpoint", () => {
   });
 
   it("should allow filtering by name sw", async () => {
-    const cardFactory = new CardFactory(ctx.db);
+    const cardFactory = new CardFactory(prisma);
     const card = await cardFactory.create({
       name: "Animate Dead",
     });
