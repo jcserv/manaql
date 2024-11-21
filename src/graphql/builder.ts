@@ -7,6 +7,7 @@ import RelayPlugin from "@pothos/plugin-relay";
 
 import { Context } from "@/context";
 import { prisma } from "@/db";
+import { Decimal } from "@prisma/client/runtime/library";
 
 export interface GraphQLConfig extends SchemaTypes {
   PrismaTypes: PrismaTypes;
@@ -16,6 +17,7 @@ export interface GraphQLConfig extends SchemaTypes {
     ID: { Input: number; Output: string | number };
     Int: { Input: number; Output: number };
     Float: { Input: number; Output: number };
+    Decimal: { Input: Decimal; Output: Decimal };
     Boolean: { Input: boolean; Output: boolean };
     Date: { Input: Date; Output: Date };
   };

@@ -67,6 +67,13 @@ export enum FilterOperator {
   sw = 'sw'
 }
 
+/** The finish of a printing, can be either nonfoil, foil, or etched. */
+export enum Finish {
+  etched = 'etched',
+  foil = 'foil',
+  nonfoil = 'nonfoil'
+}
+
 export type PageInfo = {
   __typename?: 'PageInfo';
   endCursor?: Maybe<Scalars['String']['output']>;
@@ -78,9 +85,19 @@ export type PageInfo = {
 /** A printing is a version of a card that is unique to a particular set. */
 export type Printing = {
   __typename?: 'Printing';
+  backImageUri?: Maybe<Scalars['String']['output']>;
   collectorNumber?: Maybe<Scalars['String']['output']>;
+  finishes?: Maybe<Array<Finish>>;
   id?: Maybe<Scalars['ID']['output']>;
+  imageUri?: Maybe<Scalars['String']['output']>;
+  priceEur?: Maybe<Scalars['Float']['output']>;
+  priceEurEtched?: Maybe<Scalars['Float']['output']>;
+  priceEurFoil?: Maybe<Scalars['Float']['output']>;
+  priceUsd?: Maybe<Scalars['Float']['output']>;
+  priceUsdEtched?: Maybe<Scalars['Float']['output']>;
+  priceUsdFoil?: Maybe<Scalars['Float']['output']>;
   set?: Maybe<Scalars['String']['output']>;
+  setName?: Maybe<Scalars['String']['output']>;
 };
 
 export type Query = {
@@ -174,6 +191,8 @@ export type ResolversTypes = {
   CardPrintingsConnectionEdge: ResolverTypeWrapper<CardPrintingsConnectionEdge>;
   Date: ResolverTypeWrapper<Scalars['Date']['output']>;
   FilterOperator: FilterOperator;
+  Finish: Finish;
+  Float: ResolverTypeWrapper<Scalars['Float']['output']>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   PageInfo: ResolverTypeWrapper<PageInfo>;
@@ -190,6 +209,7 @@ export type ResolversParentTypes = {
   CardPrintingsConnection: CardPrintingsConnection;
   CardPrintingsConnectionEdge: CardPrintingsConnectionEdge;
   Date: Scalars['Date']['output'];
+  Float: Scalars['Float']['output'];
   ID: Scalars['ID']['output'];
   Int: Scalars['Int']['output'];
   PageInfo: PageInfo;
@@ -231,9 +251,19 @@ export type PageInfoResolvers<ContextType = any, ParentType extends ResolversPar
 };
 
 export type PrintingResolvers<ContextType = any, ParentType extends ResolversParentTypes['Printing'] = ResolversParentTypes['Printing']> = {
+  backImageUri?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   collectorNumber?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  finishes?: Resolver<Maybe<Array<ResolversTypes['Finish']>>, ParentType, ContextType>;
   id?: Resolver<Maybe<ResolversTypes['ID']>, ParentType, ContextType>;
+  imageUri?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  priceEur?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
+  priceEurEtched?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
+  priceEurFoil?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
+  priceUsd?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
+  priceUsdEtched?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
+  priceUsdFoil?: Resolver<Maybe<ResolversTypes['Float']>, ParentType, ContextType>;
   set?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
+  setName?: Resolver<Maybe<ResolversTypes['String']>, ParentType, ContextType>;
   __isTypeOf?: IsTypeOfResolverFn<ParentType, ContextType>;
 };
 
