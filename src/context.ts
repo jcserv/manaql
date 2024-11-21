@@ -1,16 +1,16 @@
 import { prisma } from "@/db";
 import {
-  createAuthorLoader,
-  createBookLoader,
-  createBooksByAuthorLoader,
+  createCardLoader,
+  createPrintingLoader,
+  createPrintingsByCardLoader,
 } from "@/graphql/dataLoaders";
 
 export interface Context {
   prisma: typeof prisma;
   loaders: {
-    book: ReturnType<typeof createBookLoader>;
-    author: ReturnType<typeof createAuthorLoader>;
-    booksByAuthor: ReturnType<typeof createBooksByAuthorLoader>;
+    printing: ReturnType<typeof createPrintingLoader>;
+    card: ReturnType<typeof createCardLoader>;
+    printingsByCard: ReturnType<typeof createPrintingsByCardLoader>;
   };
 }
 
@@ -18,9 +18,9 @@ export async function createContext(): Promise<Context> {
   return {
     prisma,
     loaders: {
-      book: createBookLoader(),
-      author: createAuthorLoader(),
-      booksByAuthor: createBooksByAuthorLoader(),
+      printing: createPrintingLoader(),
+      card: createCardLoader(),
+      printingsByCard: createPrintingsByCardLoader(),
     },
   };
 }

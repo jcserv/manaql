@@ -5,6 +5,10 @@ import { printSchema } from "graphql";
 const config: CodegenConfig = {
   overwrite: true,
   schema: printSchema(createPothosSchema().public),
+  config: {
+    transformUnderscore: false,
+    namingConvention: 'keep',
+  },
   generates: {
     "src/__generated__/graphql.ts": {
       plugins: [

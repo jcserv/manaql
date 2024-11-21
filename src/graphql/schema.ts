@@ -1,8 +1,8 @@
 import { builder } from "@/graphql/builder";
 
 // Imports to ensure types are defined
-import "@/graphql/author";
-import "@/graphql/book";
+import "@/graphql/card";
+import "@/graphql/printing";
 import "@/graphql/query";
 
 export function createPothosSchema() {

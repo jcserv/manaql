@@ -5,7 +5,7 @@ import PrismaPlugin from "@pothos/plugin-prisma";
 import type PrismaTypes from "@pothos/plugin-prisma/generated";
 import RelayPlugin from "@pothos/plugin-relay";
 
-import { Author, Book } from "@/__generated__/graphql";
+import { Card, Printing } from "@/__generated__/graphql";
 import { Context } from "@/context";
 import { prisma } from "@/db";
 
@@ -29,5 +29,6 @@ export const builder = new SchemaBuilder<{
 
 builder.addScalarType("Date", DateResolver, {});
 
-export const BookRef = builder.objectRef<Book>("Book");
-export const AuthorRef = builder.objectRef<Author>("Author");
+export const CardRef = builder.objectRef<Card>("Card");
+export const PrintingRef = builder.objectRef<Printing>("Printing");
+

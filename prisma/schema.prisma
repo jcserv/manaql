@@ -11,15 +11,16 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model book {
-  id        Int    @id @default(autoincrement())
-  title     String @db.VarChar(255)
-  author_id Int    @default(autoincrement())
-  author    author @relation(fields: [author_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+model card {
+  id       Int        @id @default(autoincrement())
+  name     String     @unique @db.VarChar(255)
+  printing printing[]
 }
 
-model author {
-  id   Int    @id @default(autoincrement())
-  name String @db.VarChar(255)
-  book book[]
+model printing {
+  id               Int    @id @default(autoincrement())
+  card_id          Int    @default(autoincrement())
+  set              String @db.VarChar(7)
+  collector_number String @db.VarChar(7)
+  card             card   @relation(fields: [card_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }

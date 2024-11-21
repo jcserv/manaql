@@ -7,9 +7,9 @@ import { PrismaClient } from '@prisma/client';
 import { createPothosSchema } from '@/graphql/schema';
 import { Context } from '@/context';
 import {
-  createAuthorLoader,
-  createBookLoader,
-  createBooksByAuthorLoader,
+  createCardLoader,
+  createPrintingLoader,
+  createPrintingsByCardLoader,
 } from '@/graphql/dataLoaders';
 import { GraphQLResponse } from '@tests/graphql/types';
 
@@ -25,9 +25,9 @@ export class TestContext {
     this.context = {
       prisma: this.db,
       loaders: {
-        book: createBookLoader(),
-        author: createAuthorLoader(),
-        booksByAuthor: createBooksByAuthorLoader(),
+        printing: createPrintingLoader(),
+        card: createCardLoader(),
+        printingsByCard: createPrintingsByCardLoader(),
       },
     };
 
@@ -58,9 +58,9 @@ export class TestContext {
           ...this.context,
           ...contextOverrides,
           loaders: {
-            book: createBookLoader(),
-            author: createAuthorLoader(),
-            booksByAuthor: createBooksByAuthorLoader(),
+            printing: createPrintingLoader(),
+            card: createCardLoader(),
+            printingsByCard: createPrintingsByCardLoader(),
           },
         };
       }

@@ -1,11 +1,11 @@
 import DataLoader from "dataloader";
 
-import { Author, Book } from "@/__generated__/graphql";
+import { Card, Printing } from "@/__generated__/graphql";
 import { prisma } from "@/db";
 
-export const createAuthorLoader = () => {
-  return new DataLoader<number, Author>(async (ids) => {
-    const authors = await prisma.author.findMany({
+export const createCardLoader = () => {
+  return new DataLoader<number, Card>(async (ids) => {
+    const cards = await prisma.card.findMany({
       where: {
         id: {
           in: ids as number[],
@@ -13,14 +13,14 @@ export const createAuthorLoader = () => {
       },
     });
 
-    const authorMap = new Map(authors.map((author) => [author.id, author]));
-    return ids.map((id) => authorMap.get(id)!);
+    const cardMap = new Map(cards.map((card) => [card.id, card]));
+    return ids.map((id) => cardMap.get(id)!);
   });
 };
 
-export const createBookLoader = () => {
-  return new DataLoader<number, Book>(async (ids) => {
-    const books = await prisma.book.findMany({
+export const createPrintingLoader = () => {
+  return new DataLoader<number, Printing>(async (ids) => {
+    const printings = await prisma.printing.findMany({
       where: {
         id: {
           in: ids as number[],
@@ -28,17 +28,17 @@ export const createBookLoader = () => {
       },
     });
 
-    const bookMap = new Map(books.map((book) => [book.id, book]));
-    return ids.map((id) => bookMap.get(id)!);
+    const printingMap = new Map(printings.map((printing) => [printing.id, printing]));
+    return ids.map((id) => printingMap.get(id)!);
   });
 };
 
-export const createBooksByAuthorLoader = () => {
-  return new DataLoader<number, Book[]>(async (authorIds) => {
-    const books = await prisma.book.findMany({
+export const createPrintingsByCardLoader = () => {
+  return new DataLoader<number, Printing[]>(async (cardIds) => {
+    const printings = await prisma.printing.findMany({
       where: {
-        author_id: {
-          in: authorIds as number[],
+        card_id: {
+          in: cardIds as number[],
         },
       },
       orderBy: {
@@ -46,15 +46,15 @@ export const createBooksByAuthorLoader = () => {
       },
     });
 
-    const booksByAuthor = new Map<number, Book[]>();
-    authorIds.forEach((id) => booksByAuthor.set(id, []));
+    const printingsByCard = new Map<number, Printing[]>();
+    cardIds.forEach((id) => printingsByCard.set(id, []));
 
-    books.forEach((book) => {
-      const authorBooks = booksByAuthor.get(book.author_id) || [];
-      authorBooks.push(book);
-      booksByAuthor.set(book.author_id, authorBooks);
+    printings.forEach((printing) => {
+      const cardPrintings = printingsByCard.get(printing.card_id) || [];
+      cardPrintings.push(printing);
+      printingsByCard.set(printing.card_id, cardPrintings);
     });
 
-    return authorIds.map((id) => booksByAuthor.get(id) || []);
+    return cardIds.map((id) => printingsByCard.get(id) || []);
   });
 };
