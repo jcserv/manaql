@@ -31,17 +31,10 @@ export const builder = new SchemaBuilder<GraphQLConfig>({
     cursorType: "String",
     clientMutationId: "omit",
     nodesOnConnection: false,
+    nodeQueryOptions: false,
+    nodesQueryOptions: false,
     firstArgOptions: {
       defaultValue: 10,
-    },
-    lastArgOptions: {
-      defaultValue: 10,
-    },
-    beforeArgOptions: {
-      defaultValue: "",
-    },
-    afterArgOptions: {
-      defaultValue: "",
     },
   },
 });
