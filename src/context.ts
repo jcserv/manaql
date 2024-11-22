@@ -1,23 +1,12 @@
-import {
-  createCardLoader,
-  createPrintingLoader,
-  createPrintingsByCardLoader,
-} from "@/graphql/dataLoaders";
-
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export interface Context {
-  loaders: {
-    printing: ReturnType<typeof createPrintingLoader>;
-    card: ReturnType<typeof createCardLoader>;
-    printingsByCard: ReturnType<typeof createPrintingsByCardLoader>;
-  };
 }
 
 export async function createContext(): Promise<Context> {
+  return {};
+}
+
+export function createTestContext(): Context {
   return {
-    loaders: {
-      printing: createPrintingLoader(),
-      card: createCardLoader(),
-      printingsByCard: createPrintingsByCardLoader(),
-    },
   };
 }

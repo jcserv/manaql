@@ -4,12 +4,7 @@ import { DocumentNode, print, GraphQLError } from "graphql";
 import { ClientError, GraphQLClient } from "graphql-request";
 
 import { createPothosSchema } from "@/graphql/schema";
-import { Context } from "@/context";
-import {
-  createCardLoader,
-  createPrintingLoader,
-  createPrintingsByCardLoader,
-} from "@/graphql/dataLoaders";
+import { Context, createTestContext } from "@/context";
 import { GraphQLResponse } from "@tests/graphql/types";
 import { prisma } from "@/db";
 
@@ -19,13 +14,7 @@ export class TestContext {
   static client: GraphQLClient;
 
   constructor() {
-    this.context = {
-      loaders: {
-        printing: createPrintingLoader(),
-        card: createCardLoader(),
-        printingsByCard: createPrintingsByCardLoader(),
-      },
-    };
+    this.context = createTestContext();
 
     this.server = new ApolloServer<Context>({
       schema: createPothosSchema().public,
@@ -53,11 +42,6 @@ export class TestContext {
         this.context = {
           ...this.context,
           ...contextOverrides,
-          loaders: {
-            printing: createPrintingLoader(),
-            card: createCardLoader(),
-            printingsByCard: createPrintingsByCardLoader(),
-          },
         };
       }
 

@@ -26,3 +26,8 @@ export function compare(
   }
   return 0;
 }
+
+export const sortByIds = <T extends { id: number }>(ids: readonly number[], items: T[]): T[] => {
+  const itemMap = new Map(items.map(item => [item.id, item]));
+  return ids.map(id => itemMap.get(id)!);
+};

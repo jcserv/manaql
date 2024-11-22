@@ -14,9 +14,6 @@ importers:
       '@pothos/core':
         specifier: ^4.3.0
         version: 4.3.0(graphql@16.9.0)
-      '@pothos/plugin-dataloader':
-        specifier: ^4.3.0
-        version: 4.3.0(@pothos/core@4.3.0(graphql@16.9.0))(dataloader@2.2.2)(graphql@16.9.0)
       '@pothos/plugin-prisma':
         specifier: ^4.3.1
         version: 4.3.1(@pothos/core@4.3.0(graphql@16.9.0))(@prisma/client@5.22.0(prisma@5.22.0))(graphql@16.9.0)(typescript@5.6.3)
@@ -29,9 +26,6 @@ importers:
       '@prisma/client':
         specifier: 5.22.0
         version: 5.22.0(prisma@5.22.0)
-      dataloader:
-        specifier: ^2.2.2
-        version: 2.2.2
       dotenv:
         specifier: ^16.4.5
         version: 16.4.5
@@ -1115,13 +1109,6 @@ packages:
   '@pothos/core@4.3.0':
     resolution: {integrity: sha512-i4nyI8wSCjxdHUomqQ2K3FH0Glklomfv4tJNifQVU9lPtQKoKaS69VxGv+fru0HAZzb1eC1XPEPN3XPCYcvZ7Q==}
     peerDependencies:
-      graphql: '>=16.6.0'
-
-  '@pothos/plugin-dataloader@4.3.0':
-    resolution: {integrity: sha512-VXY4sv/iPUosUVO2W9Kmgo/F1TuvUI6vt1lc5iXZDITxNK9jU5qBZysHTjE3BiC1K7g6yMNXlb4Z65IxLgfPkA==}
-    peerDependencies:
-      '@pothos/core': '*'
-      dataloader: '2'
       graphql: '>=16.6.0'
 
   '@pothos/plugin-prisma@4.3.1':
@@ -4631,12 +4618,6 @@ snapshots:
 
   '@pothos/core@4.3.0(graphql@16.9.0)':
     dependencies:
-      graphql: 16.9.0
-
-  '@pothos/plugin-dataloader@4.3.0(@pothos/core@4.3.0(graphql@16.9.0))(dataloader@2.2.2)(graphql@16.9.0)':
-    dependencies:
-      '@pothos/core': 4.3.0(graphql@16.9.0)
-      dataloader: 2.2.2
       graphql: 16.9.0
 
   '@pothos/plugin-prisma@4.3.1(@pothos/core@4.3.0(graphql@16.9.0))(@prisma/client@5.22.0(prisma@5.22.0))(graphql@16.9.0)(typescript@5.6.3)':
