@@ -30,7 +30,7 @@ builder.prismaNode("card", {
       type: "printing",
       cursor: "id",
       maxSize: 100, // maximum amount of printings that can be returned is 100,
-                    // sol ring has the most printings at 81
+      // sol ring has the most printings at 81
       description: "The printings of a card.",
       resolve: async (query) => {
         return prisma.printing.findMany({
@@ -45,8 +45,8 @@ export function addCardNode(t: QueryFieldBuilder) {
   return t.prismaConnection({
     type: "card",
     cursor: "id",
-    maxSize: 100, // maximum amount of cards that can be returned is 100, 
-                  // based on the number of unique cards in a commander deck
+    maxSize: 100, // maximum amount of cards that can be returned is 100,
+    // based on the number of unique cards in a commander deck
     args: {
       // first, last, before, after are automatically added by Relay
       cardId: t.arg.int({
@@ -59,11 +59,11 @@ export function addCardNode(t: QueryFieldBuilder) {
       }),
     },
     resolve: async (query, _parent, args) => {
-      if ((args.first ?? 0 ) + (args.last ?? 0) > 100) {
-        throw new GraphQLError('Invalid argument value', {
+      if ((args.first ?? 0) + (args.last ?? 0) > 100) {
+        throw new GraphQLError("Invalid argument value", {
           extensions: {
-            code: 'BAD_USER_INPUT',
-            detail: 'The maximum amount of cards that can be returned is 100',
+            code: "BAD_USER_INPUT",
+            detail: "The maximum amount of cards that can be returned is 100",
           },
         });
       }

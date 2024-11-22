@@ -12,7 +12,10 @@ export class PrintingFactory {
       set_name: faker.string.alpha({ length: 10 }),
       collector_number: faker.string.numeric({ length: 3 }),
       image_uri: faker.image.url(),
-      finishes: faker.helpers.arrayElements(Object.values(finish), { min: 1, max: 3})
+      finishes: faker.helpers.arrayElements(Object.values(finish), {
+        min: 1,
+        max: 3,
+      }),
     };
   }
 

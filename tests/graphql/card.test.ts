@@ -48,17 +48,18 @@ describe("When querying cards endpoint", () => {
             }
           }
         }
-      }`;
+      }
+    `;
 
-      const cardFactory = new CardFactory(prisma);
-      const card = await cardFactory.create({
-        name: "Animate Dead",
-      });
-      const response = await ctx.query<GetCardsResponse>(GET_CARD, {
-        cardId: card.id,
-      });
-      expect(response.success).toBe(true);
-      expectRelayConnection(response.data?.cards, [{ name: card.name }]);
+    const cardFactory = new CardFactory(prisma);
+    const card = await cardFactory.create({
+      name: "Animate Dead",
+    });
+    const response = await ctx.query<GetCardsResponse>(GET_CARD, {
+      cardId: card.id,
+    });
+    expect(response.success).toBe(true);
+    expectRelayConnection(response.data?.cards, [{ name: card.name }]);
   });
 
   it("should be able to get first X cards", async () => {
@@ -71,8 +72,9 @@ describe("When querying cards endpoint", () => {
             }
           }
         }
-      }`
-    
+      }
+    `;
+
     const cardFactory = new CardFactory(prisma);
     const cards = await cardFactory.createMany([
       { name: "Animate Dead" },
@@ -124,7 +126,7 @@ describe("When querying cards endpoint", () => {
       [
         { set: "MKC", collector_number: "125" },
         { set: "30A", collector_number: "92" },
-      ]
+      ],
     );
 
     const response = await ctx.query<GetCardsResponse>(GET_CARDS, {

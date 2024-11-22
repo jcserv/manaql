@@ -10,7 +10,7 @@ export class CardFactory {
   static getDefaults(): Omit<CreateCardInput, "printing"> {
     return {
       name: faker.person.fullName(),
-      main_type: faker.helpers.enumValue(cardtype)
+      main_type: faker.helpers.enumValue(cardtype),
     };
   }
 
@@ -25,9 +25,7 @@ export class CardFactory {
     });
   }
 
-  async createMany(
-    input: Partial<CreateCardInput>[] = [],
-  ): Promise<card[]> {
+  async createMany(input: Partial<CreateCardInput>[] = []): Promise<card[]> {
     const cards = [];
     for (let i = 0; i < input.length; i++) {
       cards.push(await this.create(input[i]));

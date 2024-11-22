@@ -9,8 +9,8 @@ builder.addScalarType("Date", DateResolver, {});
 builder.scalarType("Decimal", {
   serialize: (value) => value.toString(),
   parseValue: (value) => {
-    if (typeof value !== 'string') {
-      throw new TypeError('Decimal must be a string');
+    if (typeof value !== "string") {
+      throw new TypeError("Decimal must be a string");
     }
     return new Decimal(value);
   },
@@ -39,7 +39,8 @@ export const CardFilterRef = builder.inputType("CardFilter", {
       required: true,
     }),
     operator: t.field({
-      description: "The operator to apply to the filter. Supported operators are `eq` and `sw`.",
+      description:
+        "The operator to apply to the filter. Supported operators are `eq` and `sw`.",
       type: FilterOperatorRef,
       required: true,
     }),
@@ -53,7 +54,8 @@ export const CardFilterRef = builder.inputType("CardFilter", {
 
 export const FinishRef = builder.enumType(finish, {
   name: "Finish",
-  description: "The available finishes of a printing, can be either nonfoil, foil, or etched.",
+  description:
+    "The available finishes of a printing, can be either nonfoil, foil, or etched.",
 });
 
 type BuilderTypes = typeof builder.$inferSchemaTypes;
