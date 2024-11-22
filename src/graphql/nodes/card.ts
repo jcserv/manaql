@@ -1,99 +1,86 @@
-import { card, printing, Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 
-import { PrintingNode } from "@/graphql/nodes/printing";
-import { compare } from "@/utils";
 import { prisma } from "@/db";
-import { CardFilter, FilterOperator } from "@/graphql/types/filter";
 import { builder } from "@/graphql/builder";
 import {
   CardFilterRef,
   CardTypeRef,
   QueryFieldBuilder,
 } from "@/graphql/builderTypes";
+import { FilterOperator, CardFilter } from "@/graphql/types/filter";
+import { GraphQLError } from "graphql";
 
-const CardNode = builder.objectRef<card>("Card").implement({
-  description:
-    "A card is the standard component of Magic: The Gathering and one of its resources.",
+builder.prismaNode("card", {
+  id: {
+    field: "id",
+    description: "A unique string identifier for a card, used for pagination.",
+  },
   fields: (t) => ({
-    id: t.exposeID("id", { description: "The unique identifier of a card." }),
+    cardId: t.exposeID("id", {
+      description: "The numeric unique identifier of a card.",
+    }),
     name: t.exposeString("name", { description: "The name of a card." }),
     mainType: t.field({
-      description: "The primary type of a card; can be used to group cards by type in a decklist.",
+      description:
+        "The primary type of a card; can be used to group cards by type in a decklist.",
       type: CardTypeRef,
       resolve: (parent) => parent.main_type,
     }),
-    printings: t.connection({
+    printings: t.prismaConnection({
+      type: "printing",
+      cursor: "id",
+      maxSize: 100, // maximum amount of printings that can be returned is 100,
+                    // sol ring has the most printings at 81
       description: "The printings of a card.",
-      type: PrintingNode,
-      resolve: async (parent, args, context) => {
-        const allPrintings = await context.loaders.printingsByCard.load(
-          parent.id
-        );
-
-        const sortedPrintings = [...allPrintings].sort((a, b) =>
-          compare(a.id, b.id)
-        );
-
-        const take = args.first ?? 10;
-
-        let startIndex = 0;
-        if (args.after) {
-          const cursorIndex = sortedPrintings.findIndex(
-            (printing) => printing.id === parseInt(args.after ?? "")
-          );
-          startIndex = cursorIndex + 1;
-        }
-
-        const paginatedPrintings = sortedPrintings.slice(
-          startIndex,
-          startIndex + take + 1
-        );
-
-        const hasNextPage = paginatedPrintings.length > take;
-        const nodes = hasNextPage
-          ? paginatedPrintings.slice(0, -1)
-          : paginatedPrintings;
-
-        const edges = nodes.map((node) => ({
-          cursor: node.id?.toString(),
-          node,
-        })) as Array<{
-          cursor: string;
-          node: printing;
-        }>;
-
-        return {
-          edges,
-          pageInfo: {
-            hasNextPage,
-            hasPreviousPage: !!args.after,
-            startCursor: edges[0]?.cursor ?? null,
-            endCursor: edges[edges.length - 1]?.cursor ?? null,
-          },
-        };
+      resolve: async (query) => {
+        return prisma.printing.findMany({
+          ...query,
+        });
       },
     }),
   }),
 });
 
 export function addCardNode(t: QueryFieldBuilder) {
-  return t.field({
-    type: [CardNode],
+  return t.prismaConnection({
+    type: "card",
+    cursor: "id",
+    maxSize: 100, // maximum amount of cards that can be returned is 100, 
+                  // based on the number of unique cards in a commander deck
     args: {
-      id: t.arg.int({ required: false }),
+      // first, last, before, after are automatically added by Relay
+      cardId: t.arg.int({
+        required: false,
+        description: "The numeric unique identifier of a card.",
+      }),
       filter: t.arg({
         type: CardFilterRef,
         required: false,
       }),
-      first: t.arg.int({ required: true }),
     },
-    resolve: async (parent, args) => {
+    resolve: async (query, _parent, args) => {
+      if ((args.first ?? 0 ) + (args.last ?? 0) > 100) {
+        throw new GraphQLError('Invalid argument value', {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+            detail: 'The maximum amount of cards that can be returned is 100',
+          },
+        });
+      }
+
+      if (args.cardId) {
+        const card = await prisma.card.findUnique({
+          where: {
+            id: args.cardId,
+          },
+        });
+        return card ? [card] : [];
+      }
       return prisma.card.findMany({
+        ...query,
         where: {
-          ...(args.id ? { id: args.id } : {}),
           ...buildWhereClause(args.filter),
         },
-        take: args.first,
       });
     },
   });

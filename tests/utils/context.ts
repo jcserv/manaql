@@ -46,7 +46,7 @@ export class TestContext {
   async query<TData>(
     query: string | DocumentNode,
     variables?: Record<string, unknown>,
-    contextOverrides: Partial<Context> = {},
+    contextOverrides: Partial<Context> = {}
   ): Promise<GraphQLResponse<TData>> {
     try {
       if (Object.keys(contextOverrides).length > 0) {
@@ -64,7 +64,7 @@ export class TestContext {
       const queryString = typeof query === "string" ? query : print(query);
       const data = await TestContext.client.request<TData>(
         queryString,
-        variables,
+        variables
       );
 
       return {
@@ -73,6 +73,7 @@ export class TestContext {
       };
     } catch (error: unknown) {
       if (error instanceof ClientError) {
+        console.error(error);
         return {
           success: false,
           errors: [new GraphQLError(error.message, { originalError: error })],
@@ -80,6 +81,7 @@ export class TestContext {
       }
       const errorMessage =
         error instanceof Error ? error.message : "Unknown error occurred";
+      console.error(errorMessage);
       return {
         success: false,
         errors: [new GraphQLError(errorMessage)],

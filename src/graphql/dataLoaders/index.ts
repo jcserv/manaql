@@ -3,6 +3,8 @@ import DataLoader from "dataloader";
 import { card, printing } from "@prisma/client";
 import { prisma } from "@/db";
 
+// TODO: add pagination support 
+
 export const createCardLoader = () => {
   return new DataLoader<number, card>(async (ids) => {
     const cards = await prisma.card.findMany({

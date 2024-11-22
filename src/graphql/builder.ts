@@ -2,8 +2,8 @@ import SchemaBuilder, { SchemaTypes } from "@pothos/core";
 
 import DataloaderPlugin from "@pothos/plugin-dataloader";
 import PrismaPlugin from "@pothos/plugin-prisma";
-import type PrismaTypes from "@pothos/plugin-prisma/generated";
 import RelayPlugin from "@pothos/plugin-relay";
+import type PrismaTypes from "@pothos/plugin-prisma/generated";
 
 import { Context } from "@/context";
 import { prisma } from "@/db";
@@ -32,5 +32,17 @@ export const builder = new SchemaBuilder<GraphQLConfig>({
     cursorType: "String",
     clientMutationId: "omit",
     nodesOnConnection: false,
+    firstArgOptions: {
+      defaultValue: 10,
+    },
+    lastArgOptions: {
+      defaultValue: 10,
+    },
+    beforeArgOptions: {
+      defaultValue: "",
+    },
+    afterArgOptions: {
+      defaultValue: "",
+    },
   },
 });

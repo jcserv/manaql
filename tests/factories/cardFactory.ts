@@ -26,22 +26,20 @@ export class CardFactory {
   }
 
   async createMany(
-    count: number,
-    input: Partial<CreateCardInput> = {},
+    input: Partial<CreateCardInput>[] = [],
   ): Promise<card[]> {
     const cards = [];
-    for (let i = 0; i < count; i++) {
-      cards.push(await this.create(input));
+    for (let i = 0; i < input.length; i++) {
+      cards.push(await this.create(input[i]));
     }
     return cards;
   }
 
   async createWithPrintings(
-    printingCount: number = 1,
     cardInput: Partial<Omit<CreateCardInput, "printing">> = {},
     printingInputs: Partial<CreatePrintingInput>[] = [],
   ): Promise<card> {
-    const defaultPrintingInputs = Array(printingCount)
+    const defaultPrintingInputs = Array(printingInputs.length)
       .fill(null)
       .map((_, index) => printingInputs[index] || {});
 

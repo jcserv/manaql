@@ -1,13 +1,15 @@
-import { printing } from "@prisma/client";
 import { builder } from "@/graphql/builder";
 import { FinishRef } from "@/graphql/builderTypes";
 
-export const PrintingNode = builder.objectRef<printing>("Printing").implement({
-  description:
-    "A printing is a version of a card that is unique to a particular set.",
+builder.prismaNode("printing", {
+  id: {
+    field: "id",
+    description:
+      "A unique string identifier for a printing, used for pagination.",
+  },
   fields: (t) => ({
-    id: t.exposeID("id", {
-      description: "The unique identifier of a printing.",
+    printingId: t.exposeID("id", {
+      description: "The numeric unique identifier of a printing.",
     }),
     set: t.exposeString("set", { description: "The set code of a printing." }),
     setName: t.exposeString("set_name", {
