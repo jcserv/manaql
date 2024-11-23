@@ -3,6 +3,9 @@ ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
 RUN corepack enable
 
+RUN apt-get update -y && \
+    apt-get install -y openssl
+
 FROM base AS prod
 
 COPY pnpm-lock.yaml /app/
@@ -10,6 +13,7 @@ WORKDIR /app
 RUN pnpm fetch --prod
 
 COPY . /app
+RUN npx prisma generate
 RUN pnpm run build
 
 FROM base
