@@ -1,9 +1,9 @@
-# fly.toml app configuration file generated for manaql-divine-cherry-5217 on 2024-11-22T20:13:14-05:00
+# fly.toml app configuration file generated for manaql on 2024-11-22T20:13:14-05:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'manaql-divine-cherry-5217'
+app = 'manaql'
 primary_region = 'yyz'
 
 [build]
