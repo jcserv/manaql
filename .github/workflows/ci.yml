@@ -51,6 +51,13 @@ jobs:
       - name: Generate Prisma Client & GraphQL Types
         run: pnpm gen
 
+      - name: Setup Sentry CLI
+        uses: matbour/setup-sentry-cli@v1
+        with:
+          token: ${{ SECRETS.SENTRY_TOKEN }} # from GitHub secrets
+          organization: jarrod-servilla
+          project: manaql
+
       - name: Build
         run: pnpm build
 
