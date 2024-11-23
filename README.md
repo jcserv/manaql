@@ -20,6 +20,10 @@ I built this to be used by [bling-my-deck](https://github.com/jcserv/bling-my-de
 
 also, as a learning experience!
 
+## ok where's all the data?
+
+working on it! for now, the seed data in [the schema.sql file](./db/schema.sql) is the only data that is currently available.
+
 ## installation
 
 ### prerequisites
@@ -108,7 +112,4 @@ Variables:
 ```
 
 TODO:
-
-features
-
 - better fuzzy searching
