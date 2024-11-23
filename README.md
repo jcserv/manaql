@@ -112,11 +112,3 @@ TODO:
 features
 
 - better fuzzy searching
-
-add to template
-
-- move nodes into nodes/ folder
-- fix test db using docker db
-- infer builder types
-- test extension
-- builder.objectRef should be looking at prisma type
