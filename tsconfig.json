@@ -3,17 +3,25 @@
     "rootDir": ".",
     "baseUrl": ".",
     "outDir": "dist",
+
     "paths": {
       "@/*": ["./src/*"],
       "@tests/*": ["./tests/*"]
     },
+
     "target": "ES2022",
     "module": "commonjs",
     "lib": ["ES2022"],
     "strict": true,
     "sourceMap": true,
     "resolveJsonModule": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "inlineSources": true,
+
+    // Set `sourceRoot` to  "/" to strip the build path prefix
+    // from generated source code references.
+    // This improves issue grouping in Sentry.
+    "sourceRoot": "/"
   },
   "include": ["src/**/*", "tests/**/*"],
   "exclude": ["dist", "node_modules"]

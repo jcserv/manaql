@@ -8,7 +8,7 @@
   "license": "ISC",
   "packageManager": "pnpm@9.7.1",
   "scripts": {
-    "build": "rm -rf dist && tsc --project tsconfig.build.json && tsc-alias -p tsconfig.build.json",
+    "build": "rm -rf dist && tsc --project tsconfig.build.json && tsc-alias -p tsconfig.build.json && pnpm sentry:sourcemaps",
     "start": "node dist/src/index.js",
     "husky": "husky",
     "lint": "eslint .",
@@ -24,7 +24,8 @@
     "prisma:pull": "prisma db pull",
     "gen": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
-    "clean": "rm -rf dist node_modules"
+    "clean": "rm -rf dist node_modules",
+    "sentry:sourcemaps": "sentry-cli sourcemaps inject --org jarrod-servilla --project manaql ./dist && sentry-cli sourcemaps upload --org jarrod-servilla --project manaql ./dist"
   },
   "dependencies": {
     "@apollo/server": "^4.11.2",
@@ -33,6 +34,9 @@
     "@pothos/plugin-relay": "^4.3.0",
     "@prisma/adapter-pg": "^5.22.0",
     "@prisma/client": "5.22.0",
+    "@sentry/cli": "^2.39.0",
+    "@sentry/node": "^8.40.0",
+    "@sentry/profiling-node": "^8.40.0",
     "dotenv": "^16.4.5",
     "graphql": "^16.9.0",
     "graphql-scalars": "^1.23.0",
