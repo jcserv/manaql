@@ -8,7 +8,7 @@ RUN apt-get update -y && \
 
 FROM base AS prod
 
-COPY pnpm-lock.yaml /app/
+COPY pnpm-lock.yaml package.json /app/
 WORKDIR /app
 RUN pnpm fetch --prod
 
@@ -17,7 +17,10 @@ RUN npx prisma generate
 RUN pnpm run build
 
 FROM base
+WORKDIR /app
+COPY --from=prod /app/package.json /app/package.json
+COPY --from=prod /app/pnpm-lock.yaml /app/pnpm-lock.yaml
 COPY --from=prod /app/node_modules /app/node_modules
 COPY --from=prod /app/dist /app/dist
 EXPOSE 4000
-CMD [ "pnpm", "start" ]
+CMD [ "node", "dist/src/index.js" ]
