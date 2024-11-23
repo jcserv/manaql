@@ -22,9 +22,8 @@
     "test:db": "docker compose -p manaql-test -f docker-compose.test.yml up --detach",
     "test:db:down": "docker compose -p manaql-test -f docker-compose.test.yml down -v",
     "prisma:pull": "prisma db pull",
-    "prisma:gen": "prisma generate",
+    "gen": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
-    "gen": "pnpm prisma:gen && pnpm codegen",
     "clean": "rm -rf dist node_modules"
   },
   "dependencies": {
