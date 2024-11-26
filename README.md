@@ -114,6 +114,3 @@ Variables:
 TODO:
 
 - better fuzzy searching
-- update name from "Apollo Server Documentation" to "manaql API Documentation"
-- hide stacktraces
-- error when querying The column `printing.card_id` does not exist in the current database.",
