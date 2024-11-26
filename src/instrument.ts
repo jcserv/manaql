@@ -1,10 +1,10 @@
 import * as Sentry from "@sentry/node";
 import { nodeProfilingIntegration } from "@sentry/profiling-node";
-import { 
-  ApolloServerPlugin, 
+import {
+  ApolloServerPlugin,
   GraphQLRequestListener,
-  BaseContext
-} from '@apollo/server';
+  BaseContext,
+} from "@apollo/server";
 
 interface SentryPluginOptions {
   serviceName?: string;
@@ -14,7 +14,9 @@ interface SentryPluginOptions {
   excludedCodes?: string[];
 }
 
-export function createSentryPlugin(options: SentryPluginOptions = {}): ApolloServerPlugin<BaseContext> {
+export function createSentryPlugin(
+  options: SentryPluginOptions = {},
+): ApolloServerPlugin<BaseContext> {
   const {
     serviceName,
     includeRawQuery = true,
@@ -24,7 +26,9 @@ export function createSentryPlugin(options: SentryPluginOptions = {}): ApolloSer
   } = options;
 
   return {
-    async requestDidStart(requestContext): Promise<GraphQLRequestListener<BaseContext>> {
+    async requestDidStart(
+      requestContext,
+    ): Promise<GraphQLRequestListener<BaseContext>> {
       return {
         async didEncounterErrors(ctx) {
           if (!ctx.operation && !captureAllErrors) {
@@ -33,58 +37,61 @@ export function createSentryPlugin(options: SentryPluginOptions = {}): ApolloSer
           }
 
           for (const err of ctx.errors) {
-            if (err.extensions?.code && excludedCodes.includes(String(err.extensions.code))) {
+            if (
+              err.extensions?.code &&
+              excludedCodes.includes(String(err.extensions.code))
+            ) {
               continue;
             }
             Sentry.withScope((scope) => {
               // Set service name if provided
               if (serviceName) {
-                scope.setTag('service_name', serviceName);
+                scope.setTag("service_name", serviceName);
               }
 
               // Set operation type if available
               if (ctx.operation) {
-                scope.setTag('operation_type', ctx.operation.operation);
-                scope.setTag('operation_name', ctx.operation.name?.value);
+                scope.setTag("operation_type", ctx.operation.operation);
+                scope.setTag("operation_name", ctx.operation.name?.value);
               }
 
               if (includeRawQuery && ctx.request.query) {
-                scope.setExtra('query', ctx.request.query);
+                scope.setExtra("query", ctx.request.query);
               }
 
               if (includeRequestVariables && ctx.request.variables) {
-                scope.setExtra('variables', ctx.request.variables);
+                scope.setExtra("variables", ctx.request.variables);
               }
 
               if (err.path) {
                 scope.addBreadcrumb({
-                  category: 'query-path',
-                  message: err.path.join(' > '),
+                  category: "query-path",
+                  message: err.path.join(" > "),
                   level: "debug",
                 });
               }
 
               if (requestContext.request.http) {
                 const { headers } = requestContext.request.http;
-                
-                const transactionId = headers.get('x-transaction-id');
+
+                const transactionId = headers.get("x-transaction-id");
                 if (transactionId) {
                   scope.setTransactionName(transactionId);
                 }
 
-                scope.setExtra('headers', {
-                  'user-agent': headers.get('user-agent'),
-                  'accept-language': headers.get('accept-language'),
+                scope.setExtra("headers", {
+                  "user-agent": headers.get("user-agent"),
+                  "accept-language": headers.get("accept-language"),
                 });
               }
-              
+
               console.log(err);
               Sentry.captureException(err);
             });
           }
-        }
+        },
       };
-    }
+    },
   };
 }
 

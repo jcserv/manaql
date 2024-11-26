@@ -1,0 +1,269 @@
+"""
+Indicates exactly one field must be supplied and this field must not be `null`.
+"""
+directive @oneOf on INPUT_OBJECT
+
+"""
+Exposes a URL that specifies the behavior of this scalar.
+"""
+directive @specifiedBy(
+  """
+  The URL that specifies the behavior of this scalar.
+  """
+  url: String!
+) on SCALAR
+
+"""
+Direct the client to resolve this field locally, either from the cache or local resolvers.
+"""
+directive @client(
+  """
+  When true, the client will never use the cache for this value. See
+  https://www.apollographql.com/docs/react/essentials/local-state/#forcing-resolvers-with-clientalways-true
+  """
+  always: Boolean
+) on FIELD | FRAGMENT_DEFINITION | INLINE_FRAGMENT
+
+"""
+Export this locally resolved field as a variable to be used in the remainder of this query. See
+https://www.apollographql.com/docs/react/essentials/local-state/#using-client-fields-as-variables
+"""
+directive @export(
+  """
+  The variable name to export this field as.
+  """
+  as: String!
+) on FIELD
+
+"""
+Specify a custom store key for this result. See
+https://www.apollographql.com/docs/react/advanced/caching/#the-connection-directive
+"""
+directive @connection(
+  """
+  Specify the store key.
+  """
+  key: String!
+
+  """
+  An array of query argument names to include in the generated custom store key.
+  """
+  filter: [String!]
+) on FIELD
+
+type card implements Node {
+  """
+  The numeric unique identifier of a card.
+  """
+  cardId: ID
+
+  """
+  A unique string identifier for a card, used for pagination.
+  """
+  id: ID!
+
+  """
+  The primary type of a card; can be used to group cards by type in a decklist.
+  """
+  mainType: CardType
+
+  """
+  The name of a card.
+  """
+  name: String
+
+  """
+  The printings of a card.
+  """
+  printings(
+    after: String
+    before: String
+    first: Int = 10
+    last: Int
+  ): cardPrintingsConnection
+}
+
+"""
+The fields of Card to apply the filter(s) on.
+"""
+enum CardField {
+  name
+}
+
+"""
+The filter to narrow down the results of a query.
+"""
+input CardFilter {
+  fields: [CardField!]!
+
+  """
+  The operator to apply to the filter. Supported operators are `eq` and `sw`.
+  """
+  operator: FilterOperator!
+
+  """
+  The query values to apply to the filter.
+  """
+  query: [String!]!
+}
+
+type cardPrintingsConnection {
+  edges: [cardPrintingsConnectionEdge]
+  pageInfo: PageInfo!
+}
+
+type cardPrintingsConnectionEdge {
+  cursor: String!
+  node: printing
+}
+
+"""
+The type of card.
+"""
+enum CardType {
+  Artifact
+  Battle
+  Conspiracy
+  Creature
+  Dungeon
+  Enchantment
+  Instant
+  Kindred
+  Land
+  Phenomenon
+  Plane
+  Planeswalker
+  Scheme
+  Sorcery
+  Vanguard
+}
+
+"""
+A date string, such as 2007-12-03, compliant with the `full-date` format
+outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for
+representation of dates and times using the Gregorian calendar.
+"""
+scalar Date
+
+scalar Decimal
+
+"""
+The filter operator to apply.
+"""
+enum FilterOperator {
+  eq
+  sw
+}
+
+"""
+The available finishes of a printing, can be either nonfoil, foil, or etched.
+"""
+enum Finish {
+  etched
+  foil
+  nonfoil
+}
+
+interface Node {
+  id: ID!
+}
+
+type PageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+}
+
+type printing implements Node {
+  """
+  The image URI of the back of a printing
+  """
+  backImageUri: String
+
+  """
+  The collector number of a printing.
+  """
+  collectorNumber: String
+  finishes: [Finish!]
+
+  """
+  A unique string identifier for a printing, used for pagination.
+  """
+  id: ID!
+
+  """
+  The image URI of a printing.
+  """
+  imageUri: String
+
+  """
+  The price of the non-foil version of a printing in EUR.
+  """
+  priceEur: Decimal
+
+  """
+  The price of the etched version of a printing in EUR.
+  """
+  priceEurEtched: Decimal
+
+  """
+  The price of the foil version of a printing in EUR.
+  """
+  priceEurFoil: Decimal
+
+  """
+  The price of the non-foil version of a printing in USD.
+  """
+  priceUsd: Decimal
+
+  """
+  The price of the etched version of a printing in USD.
+  """
+  priceUsdEtched: Decimal
+
+  """
+  The price of the foil version of a printing in USD.
+  """
+  priceUsdFoil: Decimal
+
+  """
+  The numeric unique identifier of a printing.
+  """
+  printingId: ID
+
+  """
+  The set code of a printing.
+  """
+  set: String
+
+  """
+  The name of the set of a printing.
+  """
+  setName: String
+}
+
+type Query {
+  cards(
+    after: String
+    before: String
+
+    """
+    The numeric unique identifier of a card.
+    """
+    cardId: Int
+    filter: CardFilter
+    first: Int = 10
+    last: Int
+  ): QueryCardsConnection
+}
+
+type QueryCardsConnection {
+  edges: [QueryCardsConnectionEdge]
+  pageInfo: PageInfo!
+}
+
+type QueryCardsConnectionEdge {
+  cursor: String!
+  node: card
+}

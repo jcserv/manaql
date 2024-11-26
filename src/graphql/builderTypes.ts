@@ -1,8 +1,8 @@
 import { DateResolver } from "graphql-scalars";
 import { builder } from "@/graphql/builder";
 import { CardField, FilterOperator } from "@/graphql/types/filter";
-import { cardtype, finish } from "@prisma/client";
 import { Decimal } from "@prisma/client/runtime/library";
+import { CardType, Finish } from "@/graphql/types";
 
 builder.addScalarType("Date", DateResolver, {});
 
@@ -16,7 +16,7 @@ builder.scalarType("Decimal", {
   },
 });
 
-export const CardTypeRef = builder.enumType(cardtype, {
+export const CardTypeRef = builder.enumType(CardType, {
   name: "CardType",
   description: "The type of card.",
 });
@@ -52,7 +52,7 @@ export const CardFilterRef = builder.inputType("CardFilter", {
   }),
 });
 
-export const FinishRef = builder.enumType(finish, {
+export const FinishRef = builder.enumType(Finish, {
   name: "Finish",
   description:
     "The available finishes of a printing, can be either nonfoil, foil, or etched.",

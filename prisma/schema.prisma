@@ -14,26 +14,30 @@ datasource db {
 model card {
   id        Int        @id @default(autoincrement())
   name      String     @unique @db.VarChar(255)
-  main_type cardtype
+  main_type String     @db.VarChar(31)
   printing  printing[]
+
+  @@index([name], map: "card_name_d92f5e8d_like")
 }
 
 model printing {
   id               Int      @id @default(autoincrement())
-  card_id          Int      @default(autoincrement())
   set              String   @db.VarChar(7)
   set_name         String   @db.VarChar(255)
-  collector_number String   @db.VarChar(7)
+  collector_number String   @db.VarChar(31)
   image_uri        String   @db.VarChar(255)
   back_image_uri   String?  @db.VarChar(255)
-  finishes         finish[]
+  finishes         String[] @db.VarChar(7)
   price_usd        Decimal? @db.Decimal(10, 2)
   price_usd_foil   Decimal? @db.Decimal(10, 2)
   price_usd_etched Decimal? @db.Decimal(10, 2)
   price_eur        Decimal? @db.Decimal(10, 2)
   price_eur_foil   Decimal? @db.Decimal(10, 2)
   price_eur_etched Decimal? @db.Decimal(10, 2)
-  card             card     @relation(fields: [card_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  card_id          Int
+  card             card     @relation(fields: [card_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "printing_card_id_28791452_fk_card_id")
+
+  @@index([card_id], map: "printing_card_id_id_38c707ed")
 }
 
 enum cardtype {
@@ -52,6 +56,7 @@ enum cardtype {
   Plane
   Scheme
   Vanguard
+  Unknown
 }
 
 enum finish {
