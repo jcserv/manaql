@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { card, Prisma } from "@prisma/client";
 
 import { prisma } from "@/db";
 import { builder } from "@/graphql/builder";
@@ -7,8 +7,8 @@ import {
   CardTypeRef,
   QueryFieldBuilder,
 } from "@/graphql/builderTypes";
-import { FilterOperator, CardFilter } from "@/graphql/types/filter";
 import { GraphQLError } from "graphql";
+import { toCardType, FilterOperator, CardFilter } from "@/graphql/types";
 
 builder.prismaNode("card", {
   id: {
@@ -24,7 +24,7 @@ builder.prismaNode("card", {
       description:
         "The primary type of a card; can be used to group cards by type in a decklist.",
       type: CardTypeRef,
-      resolve: (parent) => parent.main_type,
+      resolve: (parent: card) => toCardType(parent.main_type),
     }),
     printings: t.prismaConnection({
       type: "printing",

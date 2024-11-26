@@ -1,5 +1,6 @@
 import { builder } from "@/graphql/builder";
 import { FinishRef } from "@/graphql/builderTypes";
+import { toFinishes } from "@/graphql/types";
 
 builder.prismaNode("printing", {
   id: {
@@ -27,7 +28,7 @@ builder.prismaNode("printing", {
     }),
     finishes: t.field({
       type: [FinishRef],
-      resolve: (parent) => parent.finishes,
+      resolve: (parent) => toFinishes(parent.finishes),
     }),
     priceUsd: t.expose("price_usd", {
       description: "The price of the non-foil version of a printing in USD.",
