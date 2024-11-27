@@ -1,10 +1,11 @@
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
 
-import { createPothosSchema } from "@/graphql/schema";
-import { Context, createContext } from "@/context";
 import "@/instrument";
+import { Context, createContext } from "@/context";
+import { createPothosSchema } from "@/graphql/schema";
 import { createSentryPlugin } from "@/instrument";
+import { excludedCodes } from "@/graphql/types";
 
 const graphqlServer = new ApolloServer<Context>({
   schema: createPothosSchema().public,
@@ -15,11 +16,7 @@ const graphqlServer = new ApolloServer<Context>({
       includeRawQuery: true,
       includeRequestVariables: true,
       captureAllErrors: false,
-      excludedCodes: [
-        "BAD_USER_INPUT",
-        "GRAPHQL_PARSE_FAILED",
-        "GRAPHQL_VALIDATION_FAILED",
-      ],
+      excludedCodes,
     }),
   ],
 });

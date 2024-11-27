@@ -1,14 +1,20 @@
-import { card, Prisma } from "@prisma/client";
+import { card } from "@prisma/client";
+import { GraphQLError } from "graphql";
 
 import { prisma } from "@/db";
 import { builder } from "@/graphql/builder";
 import {
   CardFilterRef,
   CardTypeRef,
+  PrintingFilterRef,
   QueryFieldBuilder,
 } from "@/graphql/builderTypes";
-import { GraphQLError } from "graphql";
-import { toCardType, FilterOperator, CardFilter } from "@/graphql/types";
+import { toCardType } from "@/graphql/types";
+import { buildWhereClause, buildWhereClauseWithFilters } from "@/graphql/utils";
+import { ApolloServerErrorCode } from '@apollo/server/errors';
+
+const MAX_CARDS = 100;
+const MAX_PRINTINGS = 750;
 
 builder.prismaNode("card", {
   id: {
@@ -26,15 +32,47 @@ builder.prismaNode("card", {
       type: CardTypeRef,
       resolve: (parent: card) => toCardType(parent.main_type),
     }),
-    printings: t.prismaConnection({
+    printings: t.prismaConnection({ // TODO: move this to printing.ts, couldn't figure out the types
       type: "printing",
       cursor: "id",
       maxSize: 750, // maximum amount of printings that can be returned is 750,
       // since basic lands have the most printings at 650-693
       description: "The printings of a card.",
-      resolve: async (query) => {
+      args: {
+        // first, last, before, after are automatically added by Relay
+        printingId: t.arg.int({
+          required: false,
+          description: "The numeric unique identifier of a printing.",
+        }),
+        filters: t.arg({
+          type: [PrintingFilterRef],
+          required: false,
+        }),
+      },
+      resolve: async (query, _parent, args) => {
+        if ((args.first ?? 0) + (args.last ?? 0) > MAX_PRINTINGS) {
+          throw new GraphQLError("Invalid argument value", {
+            extensions: {
+              code: ApolloServerErrorCode.BAD_USER_INPUT,
+              detail: `The maximum amount of printings that can be returned is ${MAX_PRINTINGS}`,
+            },
+          });
+        }
+
+        if (args.printingId) {
+          const printing = await prisma.printing.findUnique({
+            where: {
+              id: args.printingId,
+            },
+          });
+          return printing ? [printing] : [];
+        }
+
         return prisma.printing.findMany({
           ...query,
+          where: {
+            ...buildWhereClauseWithFilters(args.filters),
+          },
         });
       },
     }),
@@ -45,7 +83,7 @@ export function addCardNode(t: QueryFieldBuilder) {
   return t.prismaConnection({
     type: "card",
     cursor: "id",
-    maxSize: 100, // maximum amount of cards that can be returned is 100,
+    maxSize: MAX_CARDS, // maximum amount of cards that can be returned is 100,
     // based on the number of unique cards in a commander deck
     args: {
       // first, last, before, after are automatically added by Relay
@@ -59,11 +97,11 @@ export function addCardNode(t: QueryFieldBuilder) {
       }),
     },
     resolve: async (query, _parent, args) => {
-      if ((args.first ?? 0) + (args.last ?? 0) > 100) {
+      if ((args.first ?? 0) + (args.last ?? 0) > MAX_CARDS) {
         throw new GraphQLError("Invalid argument value", {
           extensions: {
-            code: "BAD_USER_INPUT",
-            detail: "The maximum amount of cards that can be returned is 100",
+            code: ApolloServerErrorCode.BAD_USER_INPUT,
+            detail: `The maximum amount of cards that can be returned is ${MAX_CARDS}`,
           },
         });
       }
@@ -84,36 +122,4 @@ export function addCardNode(t: QueryFieldBuilder) {
       });
     },
   });
-}
-
-function buildWhereClause(filter: CardFilter | null | undefined) {
-  if (!filter) return {};
-
-  const conditions = filter.fields.map((field) => {
-    const fieldConditions = filter.query.map((queryValue) => {
-      switch (filter.operator) {
-        case FilterOperator.eq:
-          return {
-            [field]: {
-              equals: queryValue,
-            },
-          };
-        case FilterOperator.sw:
-          return {
-            [field]: {
-              startsWith: queryValue,
-              mode: Prisma.QueryMode.insensitive,
-            },
-          };
-        default:
-          return {};
-      }
-    });
-
-    return fieldConditions.length > 1
-      ? { OR: fieldConditions }
-      : fieldConditions[0];
-  });
-
-  return conditions.length > 1 ? { OR: conditions } : conditions[0];
 }

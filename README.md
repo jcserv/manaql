@@ -46,70 +46,182 @@ check out [manaql-ingest](https://github.com/jcserv/manaql-ingest) for the data 
 2. run `pnpm test:db`
 3. run `pnpm test`
 
-### example queries
+## example queries
 
 POST https://api.manaql.com/graphql
 
-Get cards by name and all of their printings
-
-```graphql
-query Cards($filter: CardFilter!, $first: Int) {
-  cards(filter: $filter, first: $first) {
-    id
-    name
-    printings {
+<details>
+  <summary>Get cards by name and all of their printings</summary>
+  
+  ### Request
+  ```graphql
+  query Cards($filter: CardFilter!, $first: Int) {
+    cards(filter: $filter, first: $first) {
       edges {
         node {
-          id
-          set
-          image_uri
+          cardId
+          name
+          mainType
+          printings {
+            edges {
+              node {
+                id
+                set
+                imageUri
+              }
+            }
+          }
         }
       }
     }
   }
-}
+  ```
 
-Variables:
+### Variables
+
+```json
 {
-    "filter": {
-        "fields": ["name"],
-        "query": {
-            "operator": "eq",
-            "value": [
-              "Animate Dead",
-              "Arachnogenesis",
-              "Assassin's Trophy",
-              "Azusa, Lost but Seeking",
-              "Bala Ged Recovery",
-              "Baba Lysaga, Night Witch"
-            ]
-        }
-    }
+  "filter": {
+    "fields": ["name"],
+    "operator": "eq",
+    "query": [
+      "Animate Dead",
+      "Arachnogenesis",
+      "Assassin's Trophy",
+      "Azusa, Lost but Seeking",
+      "Bala Ged Recovery",
+      "Baba Lysaga, Night Witch"
+    ]
+  },
+  "first": 10
 }
 ```
 
-Autocomplete/typeahead
+</details>
+
+<br />
+
+<details>
+  <summary>Get cards by name and all of their printings, filtering by certain finishes and sets</summary>
+  
+  ### Request
+  ```graphql
+  query ExcludeCertainFinishesAndSets($filter: CardFilter!, $first: Int, $filters: [PrintingFilter!]) {
+    cards(filter: $filter, first: $first) {
+      edges {
+        node {
+          cardId
+          name
+          mainType
+          printings(filters: $filters) {
+            edges {
+              node {
+                id
+                set
+                imageUri
+                finishes
+                set
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  ```
+
+### Variables
+
+```json
+{
+  "filter": {
+    "fields": ["name"],
+    "operator": "eq",
+    "query": [
+      "Animate Dead",
+      "Arachnogenesis",
+      "Assassin's Trophy",
+      "Azusa, Lost but Seeking",
+      "Bala Ged Recovery",
+      "Baba Lysaga, Night Witch"
+    ]
+  },
+  "first": 10,
+  "filters": [
+    {
+      "fields": "set",
+      "operator": "ne",
+      "query": [
+        "sld"
+      ]
+    },
+    {
+      "fields": "finishes",
+      "operator": "co",
+      "query": ["nonfoil", "foil"] // if you want to exclude a finish, just don't include it in the query
+    }
+  ]
+}
+```
+
+</details>
+
+<br />
+
+<details>
+  <summary>Autocomplete/typeahead</summary>
+
+### Request
 
 ```graphql
-query Cards($filter: CardFilter!) {
-  cards(filter: $filter) {
-    id
-    name
+query Autocomplete($filter: CardFilter!, $first: Int) {
+  cards(filter: $filter, first: $first) {
+    edges {
+      node {
+        cardId
+        name
+      }
+    }
   }
-}
-
-Variables:
-{
-    "filter": {
-        "fields": ["name"],
-        "query": {
-            "operator": "sw",
-            "value": "Baba Ly"
-        }
-    },
-    "first": 10
 }
 ```
 
+### Variables
+
+```json
+{
+  "filter": {
+    "fields": ["name"],
+    "query": ["Baba Ly"],
+    "operator": "sw"
+  },
+  "first": 10
+}
+```
+
+### Response
+
+```json
+{
+  "data": {
+    "cards": {
+      "edges": [
+        {
+          "node": {
+            "cardId": "10561",
+            "name": "Baba Lysaga, Night Witch"
+          }
+        }
+      ]
+    }
+  }
+}
+```
+
+</details>
+
+<br />
+
 TODO:
+
 - better fuzzy searching

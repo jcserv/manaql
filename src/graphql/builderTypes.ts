@@ -1,8 +1,8 @@
 import { DateResolver } from "graphql-scalars";
-import { builder } from "@/graphql/builder";
-import { CardField, FilterOperator } from "@/graphql/types/filter";
 import { Decimal } from "@prisma/client/runtime/library";
-import { CardType, Finish } from "@/graphql/types";
+
+import { builder } from "@/graphql/builder";
+import { CardType, Finish, CardField, FilterOperator, PrintingField } from "@/graphql/types";
 
 builder.addScalarType("Date", DateResolver, {});
 
@@ -24,6 +24,11 @@ export const CardTypeRef = builder.enumType(CardType, {
 const CardFieldRef = builder.enumType(CardField, {
   name: "CardField",
   description: "The fields of Card to apply the filter(s) on.",
+});
+
+const PrintingFieldRef = builder.enumType(PrintingField, {
+  name: "PrintingField",
+  description: "The fields of Printing to apply the filter(s) on.",
 });
 
 const FilterOperatorRef = builder.enumType(FilterOperator, {
@@ -52,6 +57,27 @@ export const CardFilterRef = builder.inputType("CardFilter", {
   }),
 });
 
+export const PrintingFilterRef = builder.inputType("PrintingFilter", {
+  description: "The filter to narrow down the results of a query.",
+  fields: (t) => ({
+    fields: t.field({
+      type: [PrintingFieldRef],
+      required: true,
+    }),
+    operator: t.field({
+      description:
+        "The operator to apply to the filter. Supported operators are `eq`, `ne`, and `sw`.",
+      type: FilterOperatorRef,
+      required: true,
+    }),
+    query: t.field({
+      description: "The query values to apply to the filter.",
+      type: ["String"],
+      required: true,
+    }),
+  }),
+});
+
 export const FinishRef = builder.enumType(Finish, {
   name: "Finish",
   description:
@@ -59,7 +85,7 @@ export const FinishRef = builder.enumType(Finish, {
 });
 
 type BuilderTypes = typeof builder.$inferSchemaTypes;
-export type FieldBuilder = PothosSchemaTypes.FieldBuilder<BuilderTypes, object>;
+
 export type QueryFieldBuilder = PothosSchemaTypes.QueryFieldBuilder<
   BuilderTypes,
   object
