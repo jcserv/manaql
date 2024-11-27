@@ -29,8 +29,8 @@ builder.prismaNode("card", {
     printings: t.prismaConnection({
       type: "printing",
       cursor: "id",
-      maxSize: 100, // maximum amount of printings that can be returned is 100,
-      // sol ring has the most printings at 81
+      maxSize: 750, // maximum amount of printings that can be returned is 750,
+      // since basic lands have the most printings at 650-693
       description: "The printings of a card.",
       resolve: async (query) => {
         return prisma.printing.findMany({

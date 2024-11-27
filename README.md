@@ -20,9 +20,9 @@ I built this to be used by [bling-my-deck](https://github.com/jcserv/bling-my-de
 
 also, as a learning experience!
 
-## ok where's all the data?
+## where's the data coming from?
 
-working on it! for now, the seed data in [the schema.sql file](./db/schema.sql) is the only data that is currently available.
+check out [manaql-ingest](https://github.com/jcserv/manaql-ingest) for the data ingestion pipeline!
 
 ## installation
 
@@ -112,5 +112,4 @@ Variables:
 ```
 
 TODO:
-
 - better fuzzy searching
