@@ -15,7 +15,7 @@ interface SentryPluginOptions {
 }
 
 export function createSentryPlugin(
-  options: SentryPluginOptions = {},
+  options: SentryPluginOptions = {}
 ): ApolloServerPlugin<BaseContext> {
   const {
     serviceName,
@@ -27,7 +27,7 @@ export function createSentryPlugin(
 
   return {
     async requestDidStart(
-      requestContext,
+      requestContext
     ): Promise<GraphQLRequestListener<BaseContext>> {
       return {
         async didEncounterErrors(ctx) {
@@ -97,7 +97,7 @@ export function createSentryPlugin(
 
 Sentry.init({
   dsn: process.env.SENTRY_DSN,
-  integrations: [nodeProfilingIntegration()],
+  integrations: [nodeProfilingIntegration(), Sentry.prismaIntegration()],
   tracesSampleRate: 1.0,
   profilesSampleRate: 1.0,
 });

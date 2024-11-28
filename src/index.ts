@@ -1,3 +1,5 @@
+import "@/instrument";
+
 import dotenv from "dotenv";
 import { startServer } from "@/server";
 import { prisma } from "@/db";
