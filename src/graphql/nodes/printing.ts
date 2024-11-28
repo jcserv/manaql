@@ -1,6 +1,8 @@
 import { builder } from "@/graphql/builder";
 import { FinishRef } from "@/graphql/builderTypes";
 import { toFinishes } from "@/graphql/types";
+import { printing } from "@prisma/client";
+import { Decimal } from "@prisma/client/runtime/library";
 
 builder.prismaNode("printing", {
   id: {
@@ -55,10 +57,15 @@ builder.prismaNode("printing", {
       type: "Decimal",
       nullable: true,
     }),
-    priceEurEtched: t.expose("price_eur_etched", {
-      description: "The price of the etched version of a printing in EUR.",
+    priceEurEtched: t.field({
+      description:
+        "The price of the etched version of a printing in EUR. This does not exist in the Scryfall API, so it is approximated by multiplying the USD etched price by 0.9.",
       type: "Decimal",
       nullable: true,
+      resolve: (parent: printing) =>
+        parent.price_usd_etched
+          ? new Decimal((Number(parent.price_usd_etched) * 0.9).toFixed(2))
+          : null,
     }),
   }),
 });
