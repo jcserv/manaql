@@ -1,5 +1,6 @@
-import { card } from "@prisma/client";
+import { card, printing } from "@prisma/client";
 import { GraphQLError } from "graphql";
+import { ApolloServerErrorCode } from '@apollo/server/errors';
 
 import { prisma } from "@/db";
 import { builder } from "@/graphql/builder";
@@ -11,10 +12,13 @@ import {
 } from "@/graphql/builderTypes";
 import { toCardType } from "@/graphql/types";
 import { buildWhereClause, buildWhereClauseWithFilters } from "@/graphql/utils";
-import { ApolloServerErrorCode } from '@apollo/server/errors';
 
 const MAX_CARDS = 100;
 const MAX_PRINTINGS = 750;
+
+type CardWithPrintings = card & {
+  printing?: printing[];
+};
 
 builder.prismaNode("card", {
   id: {
@@ -27,19 +31,16 @@ builder.prismaNode("card", {
     }),
     name: t.exposeString("name", { description: "The name of a card." }),
     mainType: t.field({
-      description:
-        "The primary type of a card; can be used to group cards by type in a decklist.",
+      description: "The primary type of a card; can be used to group cards by type in a decklist.",
       type: CardTypeRef,
       resolve: (parent: card) => toCardType(parent.main_type),
     }),
-    printings: t.prismaConnection({ // TODO: move this to printing.ts, couldn't figure out the types
+    printings: t.prismaConnection({
       type: "printing",
       cursor: "id",
-      maxSize: 750, // maximum amount of printings that can be returned is 750,
-      // since basic lands have the most printings at 650-693
+      maxSize: MAX_PRINTINGS,
       description: "The printings of a card.",
       args: {
-        // first, last, before, after are automatically added by Relay
         printingId: t.arg.int({
           required: false,
           description: "The numeric unique identifier of a printing.",
@@ -49,7 +50,7 @@ builder.prismaNode("card", {
           required: false,
         }),
       },
-      resolve: async (query, _parent, args) => {
+      resolve: async (query, parent: CardWithPrintings, args) => {
         if ((args.first ?? 0) + (args.last ?? 0) > MAX_PRINTINGS) {
           throw new GraphQLError("Invalid argument value", {
             extensions: {
@@ -59,10 +60,15 @@ builder.prismaNode("card", {
           });
         }
 
+        if (parent.printing && !args.printingId && !args.filters) {
+          return parent.printing;
+        }
+
         if (args.printingId) {
           const printing = await prisma.printing.findUnique({
             where: {
               id: args.printingId,
+              card_id: parent.id,
             },
           });
           return printing ? [printing] : [];
@@ -71,6 +77,7 @@ builder.prismaNode("card", {
         return prisma.printing.findMany({
           ...query,
           where: {
+            card_id: parent.id,
             ...buildWhereClauseWithFilters(args.filters),
           },
         });
@@ -83,10 +90,8 @@ export function addCardNode(t: QueryFieldBuilder) {
   return t.prismaConnection({
     type: "card",
     cursor: "id",
-    maxSize: MAX_CARDS, // maximum amount of cards that can be returned is 100,
-    // based on the number of unique cards in a commander deck
+    maxSize: MAX_CARDS,
     args: {
-      // first, last, before, after are automatically added by Relay
       cardId: t.arg.int({
         required: false,
         description: "The numeric unique identifier of a card.",
@@ -111,13 +116,22 @@ export function addCardNode(t: QueryFieldBuilder) {
           where: {
             id: args.cardId,
           },
+          include: {
+            printing: true,
+          },
         });
         return card ? [card] : [];
       }
+
+      const whereClause = buildWhereClause(args.filter);
+      
       return prisma.card.findMany({
         ...query,
-        where: {
-          ...buildWhereClause(args.filter),
+        where: whereClause,
+        include: {
+          printing: {
+            take: MAX_PRINTINGS,
+          },
         },
       });
     },
