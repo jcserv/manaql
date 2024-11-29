@@ -6,30 +6,41 @@ export function buildWhereClause(filter: AllFilters) {
 
   const conditions = filter.fields.map((field) => {
     const fieldConditions = filter.query.map((queryValue) => {
+      let value: string | boolean = queryValue;
+
+      switch (queryValue) {
+        case "true":
+          value = true;
+          break;
+        case "false":
+          value = false;
+          break;
+      }
+      
       switch (filter.operator) {
         case FilterOperator.eq:
           return {
             [field]: {
-              equals: queryValue,
+              equals: value,
             },
           };
         case FilterOperator.ne:
           return {
             [field]: {
-              not: queryValue,
+              not: value,
             },
           };
         case FilterOperator.sw:
           return {
             [field]: {
-              startsWith: queryValue,
+              startsWith: value,
               mode: Prisma.QueryMode.insensitive,
             },
           };
         case FilterOperator.co:
           return {
             [field]: { // TODO: this won't work for strings, they rely on "contains"
-                has: queryValue,
+                has: value,
             }
           };
         default:

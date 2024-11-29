@@ -1,5 +1,5 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["tracing"]
 }
 
@@ -36,6 +36,7 @@ model printing {
   price_eur_foil   Decimal? @db.Decimal(10, 2)
   price_eur_etched Decimal? @db.Decimal(10, 2)
   card_id          Int
+  is_serialized    Boolean
   card             card     @relation(fields: [card_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "printing_card_id_28791452_fk_card_id")
 
   @@index([card_id], map: "printing_card_id_id_38c707ed")
@@ -54,10 +55,6 @@ enum cardtype {
   Conspiracy
   Dungeon
   Phenomenon
-  Plane
-  Scheme
-  Vanguard
-  Unknown
 }
 
 enum finish {

@@ -12,20 +12,21 @@ export enum CardField {
 }
 
 export interface CardFilter {
-  query: string[];
-  operator: FilterOperator;
   fields: CardField[];
+  operator: FilterOperator;
+  query: string[];
 }
 
 export enum PrintingField {
   set = "set",
   finishes = "finishes",
+  isSerialized = "is_serialized",
 }
 
 export interface PrintingFilter {
-  query: string[];
-  operator: FilterOperator;
   fields: PrintingField[];
+  operator: FilterOperator;
+  query: string[];
 }
 
 export type AllFilters = CardFilter | PrintingFilter | null | undefined;

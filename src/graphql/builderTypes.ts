@@ -71,7 +71,7 @@ export const PrintingFilterRef = builder.inputType("PrintingFilter", {
       required: true,
     }),
     query: t.field({
-      description: "The query values to apply to the filter.",
+      description: 'The query values to apply to the filter. Use "true" or "false" for boolean fields.',
       type: ["String"],
       required: true,
     }),
