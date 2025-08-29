@@ -1,7 +1,5 @@
 # manaql
 
-![visitors](https://img.shields.io/endpoint?url=https://vu-mi.com/api/v1/views?id=jcserv/manaql)
-
 > [!IMPORTANT]
 >
 > ManaQL is not meant to be a replacement for Scryfall, and was intended to be a minimally-viable-replacement for the usecase highlighted.
